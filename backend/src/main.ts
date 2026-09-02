@@ -1,10 +1,13 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule, ObserveInstrument } from './app.module';
+import { AppModule } from './app.module.js';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    instrument: ObserveInstrument,
-  });
-  await app.listen(process.env.PORT ?? 3000);
+  const app = await NestFactory.create(AppModule);
+
+  // Apply a global API prefix so all routes are available under /api
+  app.setGlobalPrefix('api');
+
+  await app.listen(process.env['PORT'] ?? 3000);
 }
+
 bootstrap();
