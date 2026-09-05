@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import { Sidebar } from '../components/Sidebar';
@@ -15,15 +15,8 @@ interface ApiError {
 export const UserProfilePage: React.FC = () => {
   const { user } = useAuth();
 
-  const [name, setName] = useState(user?.name || '');
-  const [address, setAddress] = useState(user?.address || '');
-
-  useEffect(() => {
-    if (user) {
-      setName(user.name || '');
-      setAddress(user.address || '');
-    }
-  }, [user]);
+  const name = useMemo(() => user?.name || '', [user]);
+  const address = useMemo(() => user?.address || '', [user]);
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -152,7 +145,7 @@ export const UserProfilePage: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div className="form-group">
                   <label>Full name</label>
-                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} readOnly />
+                  <input type="text" value={name} readOnly />
                 </div>
                 <div className="form-group">
                   <label>Email</label>
@@ -162,7 +155,7 @@ export const UserProfilePage: React.FC = () => {
 
               <div className="form-group">
                 <label>Address</label>
-                <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} readOnly />
+                <input type="text" value={address} readOnly />
               </div>
 
               <hr style={{ border: 'none', borderTop: '1px solid var(--border-subtle)', margin: '28px 0' }} />
