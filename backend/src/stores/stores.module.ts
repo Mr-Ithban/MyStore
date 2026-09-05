@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module.js';
 import { StoresController } from './stores.controller.js';
+import { OwnerController } from './owner.controller.js';
 import { StoresService } from './stores.service.js';
 
 /** Placeholder for future store-management features. */
-@Module({ imports: [AuthModule], controllers: [StoresController], providers: [StoresService] })
+@Module({ imports: [AuthModule], controllers: [StoresController, OwnerController], providers: [StoresService] })
 export class StoresModule {}
