@@ -63,14 +63,7 @@ export const AdminStoresPage: React.FC = () => {
       })
       .catch(() => {
         if (!isMounted) return;
-        setStores([
-          { id: '1', name: 'Digital Hub', email: 'contact@digitalhub.com', address: 'MG Road, Kochi', overallRating: 4.6 },
-          { id: '2', name: 'Style Studio', email: 'hello@stylestudio.com', address: 'Kakkanad, Kochi', overallRating: 4.3 },
-          { id: '3', name: 'Home Corner', email: 'info@homecorner.com', address: 'Edappally, Kochi', overallRating: 4.5 },
-          { id: '4', name: 'Care Plus Pharmacy', email: 'care@pharmacy.com', address: 'Kaloor, Kochi', overallRating: 4.2 },
-          { id: '5', name: 'AutoWorks', email: 'support@autoworks.com', address: 'Vyttila, Kochi', overallRating: 4.4 },
-          { id: '6', name: 'Fresh Basket', email: 'hello@freshbasket.com', address: 'Palarivattom, Kochi', overallRating: 4.7 },
-        ]);
+        setStores([]);
       })
       .finally(() => {
         if (isMounted) setLoading(false);

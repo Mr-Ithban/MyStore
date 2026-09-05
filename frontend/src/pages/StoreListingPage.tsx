@@ -15,6 +15,7 @@ export const StoreListingPage: React.FC = () => {
 
   const [stores, setStores] = useState<Store[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
@@ -30,18 +31,15 @@ export const StoreListingPage: React.FC = () => {
         },
       })
       .then((res) => {
-        if (isMounted) setStores(res.data.data);
-      })
-      .catch(() => {
         if (isMounted) {
-          setStores([
-            { id: '1', name: 'Digital Hub', email: 'contact@digitalhub.com', address: 'MG Road, Kochi, Kerala', overallRating: 4.6, category: 'Electronics' },
-            { id: '2', name: 'Style Studio', email: 'hello@stylestudio.com', address: 'Kakkanad, Kochi, Kerala', overallRating: 4.3, category: 'Fashion' },
-            { id: '3', name: 'Home Corner', email: 'info@homecorner.com', address: 'Edappally, Kochi, Kerala', overallRating: 4.5, category: 'Home & Living' },
-            { id: '4', name: 'Care Plus Pharmacy', email: 'care@pharmacy.com', address: 'Kaloor, Kochi, Kerala', overallRating: 4.2, category: 'Health' },
-            { id: '5', name: 'AutoWorks', email: 'support@autoworks.com', address: 'Vyttila, Kochi, Kerala', overallRating: 4.4, category: 'Automotive' },
-            { id: '6', name: 'Fresh Basket', email: 'hello@freshbasket.com', address: 'Palarivattom, Kochi', overallRating: 4.7, category: 'Grocery' },
-          ]);
+          setStores(res.data.data);
+          setError('');
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setStores([]);
+          setError(err.response?.data?.message || 'Failed to load stores.');
         }
       })
       .finally(() => {
@@ -70,6 +68,12 @@ export const StoreListingPage: React.FC = () => {
             </div>
             <button className="btn btn-secondary">☷ Filters</button>
           </div>
+
+          {error && (
+            <div className="card" style={{ color: '#ff5252', padding: '16px', marginBottom: '20px' }}>
+              {error}
+            </div>
+          )}
 
           <div className="chips-bar">
             {categories.map((cat) => (

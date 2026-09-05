@@ -29,14 +29,7 @@ export const StoreDetailsPage: React.FC = () => {
         setHasRated(true);
       }
     } catch {
-      setStore({
-        id: id || '1',
-        name: 'Digital Hub',
-        email: 'contact@digitalhub.com',
-        address: 'MG Road, Kochi, Kerala',
-        overallRating: 4.6,
-        userRating: null,
-      });
+      setStore(null);
     }
   }, [id]);
 
@@ -55,14 +48,7 @@ export const StoreDetailsPage: React.FC = () => {
       })
       .catch(() => {
         if (!isMounted) return;
-        setStore({
-          id: id || '1',
-          name: 'Digital Hub',
-          email: 'contact@digitalhub.com',
-          address: 'MG Road, Kochi, Kerala',
-          overallRating: 4.6,
-          userRating: null,
-        });
+        setStore(null);
       });
     return () => {
       isMounted = false;

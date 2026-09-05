@@ -43,14 +43,7 @@ export const AdminUsersPage: React.FC = () => {
       setUsers(res.data.data);
       setTotalPages(res.data.meta.totalPages);
     } catch {
-      setUsers([
-        { id: '1', name: 'John Doe', email: 'john@example.com', role: 'USER', address: 'Kakkanad, Kochi' },
-        { id: '2', name: 'Sarah Khan', email: 'sarah@example.com', role: 'USER', address: 'Edappally, Kochi' },
-        { id: '3', name: 'Admin One', email: 'admin@example.com', role: 'ADMIN', address: 'Kochi' },
-        { id: '4', name: 'David Roy', email: 'david@example.com', role: 'USER', address: 'Thrissur' },
-        { id: '5', name: 'Neha Paul', email: 'neha@example.com', role: 'STORE_OWNER', address: 'Kalamassery' },
-        { id: '6', name: 'Arjun K', email: 'arjun@example.com', role: 'USER', address: 'Aluva' },
-      ]);
+      setUsers([]);
     } finally {
       setLoading(false);
     }
@@ -74,14 +67,7 @@ export const AdminUsersPage: React.FC = () => {
       })
       .catch(() => {
         if (!isMounted) return;
-        setUsers([
-          { id: '1', name: 'John Doe', email: 'john@example.com', role: 'USER', address: 'Kakkanad, Kochi' },
-          { id: '2', name: 'Sarah Khan', email: 'sarah@example.com', role: 'USER', address: 'Edappally, Kochi' },
-          { id: '3', name: 'Admin One', email: 'admin@example.com', role: 'ADMIN', address: 'Kochi' },
-          { id: '4', name: 'David Roy', email: 'david@example.com', role: 'USER', address: 'Thrissur' },
-          { id: '5', name: 'Neha Paul', email: 'neha@example.com', role: 'STORE_OWNER', address: 'Kalamassery' },
-          { id: '6', name: 'Arjun K', email: 'arjun@example.com', role: 'USER', address: 'Aluva' },
-        ]);
+        setUsers([]);
       })
       .finally(() => {
         if (isMounted) setLoading(false);

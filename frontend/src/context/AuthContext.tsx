@@ -8,7 +8,7 @@ interface AuthContextType {
   token: string | null;
   role: UserRole | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   register: (data: { name: string; email: string; password: string; address: string }) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
@@ -75,7 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, [token]);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<User> => {
     const res = await api.post<{ accessToken: string; user: User }>('/auth/login', {
       email,
       password,
@@ -84,6 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(res.data.user);
     localStorage.setItem('localrate_token', res.data.accessToken);
     localStorage.setItem('localrate_user', JSON.stringify(res.data.user));
+    return res.data.user;
   };
 
   const register = async (data: { name: string; email: string; password: string; address: string }) => {

@@ -8,18 +8,15 @@ import { useNavigate } from 'react-router-dom';
 export const AdminDashboardPage: React.FC = () => {
   const [metrics, setMetrics] = useState<AdminDashboard | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     api
       .get<AdminDashboard>('/admin/dashboard')
       .then((res) => setMetrics(res.data))
-      .catch(() => {
-        setMetrics({
-          totalUsers: 1248,
-          totalStores: 320,
-          totalRatings: 5672,
-        });
+      .catch((err) => {
+        setError(err.response?.data?.message || 'Failed to load admin metrics.');
       })
       .finally(() => setLoading(false));
   }, []);
@@ -64,6 +61,12 @@ export const AdminDashboardPage: React.FC = () => {
               </button>
             </div>
           </div>
+
+          {error && (
+            <div className="card" style={{ color: '#ff5252', padding: '16px', marginBottom: '20px' }}>
+              {error}
+            </div>
+          )}
 
           {/* Platform Metrics (UI 08) */}
           <div className="metrics-grid">

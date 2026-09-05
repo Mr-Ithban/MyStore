@@ -13,6 +13,7 @@ import { OwnerDashboardPage } from './pages/OwnerDashboardPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { AdminUsersPage } from './pages/AdminUsersPage';
 import { AdminStoresPage } from './pages/AdminStoresPage';
+import { AdminRatingsPage } from './pages/AdminRatingsPage';
 
 import './App.css';
 
@@ -97,6 +98,14 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={['ADMIN']}>
                 <AdminStoresPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/ratings"
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN']}>
+                <AdminRatingsPage />
               </ProtectedRoute>
             }
           />

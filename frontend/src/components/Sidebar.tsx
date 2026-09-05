@@ -74,6 +74,12 @@ export const Sidebar: React.FC = () => {
             >
               <span className="nav-icon">🏪</span> Manage Stores
             </button>
+            <button
+              className={`nav-item ${isCurrent('/admin/ratings') ? 'active' : ''}`}
+              onClick={() => navigate('/admin/ratings')}
+            >
+              <span className="nav-icon">★</span> Manage Ratings
+            </button>
           </>
         )}
       </nav>

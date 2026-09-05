@@ -25,8 +25,14 @@ export const LoginPage: React.FC = () => {
     setError('');
     setSubmitting(true);
     try {
-      await login(email, password);
-      navigate('/explore');
+      const loggedInUser = await login(email, password);
+      if (loggedInUser.role === 'ADMIN') {
+        navigate('/admin/dashboard');
+      } else if (loggedInUser.role === 'STORE_OWNER') {
+        navigate('/owner/dashboard');
+      } else {
+        navigate('/explore');
+      }
     } catch (err: unknown) {
       const apiErr = err as ApiError;
       setError(apiErr.response?.data?.message || 'Invalid email or password.');
