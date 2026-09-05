@@ -38,7 +38,7 @@ export const UserProfilePage: React.FC = () => {
 
     setSaving(true);
     try {
-      await api.post('/auth/change-password', {
+      await api.patch('/users/me/password', {
         currentPassword,
         newPassword,
       });

@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
     try {
-      const res = await api.get<User>('/users/me');
+      const res = await api.get<User>('/auth/me');
       setUser(res.data);
       localStorage.setItem('localrate_user', JSON.stringify(res.data));
     } catch {
@@ -53,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     let isMounted = true;
     api
-      .get<User>('/users/me')
+      .get<User>('/auth/me')
       .then((res) => {
         if (isMounted) {
           setUser(res.data);

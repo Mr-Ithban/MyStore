@@ -9,35 +9,29 @@ export const OwnerDashboardPage: React.FC = () => {
   const [stores, setStores] = useState<OwnerStoreDashboard[]>([]);
   const [selectedStoreId, setSelectedStoreId] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
+    let isMounted = true;
     api
-      .get<OwnerStoreDashboard[]>('/stores/owner/dashboard')
+      .get<OwnerStoreDashboard[]>('/owner/dashboard')
       .then((res) => {
+        if (!isMounted) return;
         setStores(res.data);
         if (res.data.length > 0) {
           setSelectedStoreId(res.data[0].id);
         }
       })
-      .catch(() => {
-        const mock: OwnerStoreDashboard[] = [
-          {
-            id: 'owner-store-1',
-            name: 'Digital Hub',
-            email: 'contact@digitalhub.com',
-            address: 'MG Road, Kochi',
-            averageRating: 4.6,
-            ratings: [
-              { rating: 5, user: { id: 'u1', name: 'Sarah Mathew', email: 'sarah@example.com', address: 'Kochi' } },
-              { rating: 4, user: { id: 'u2', name: 'Arjun K', email: 'arjun@example.com', address: 'Kakkanad' } },
-              { rating: 5, user: { id: 'u3', name: 'Neha S', email: 'neha@example.com', address: 'Edappally' } },
-            ],
-          },
-        ];
-        setStores(mock);
-        setSelectedStoreId(mock[0].id);
+      .catch((err) => {
+        if (!isMounted) return;
+        setError(err.response?.data?.message || 'Failed to load dashboard.');
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const activeStore = stores.find((s) => s.id === selectedStoreId) || stores[0];
@@ -77,6 +71,10 @@ export const OwnerDashboardPage: React.FC = () => {
           {loading ? (
             <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
               Loading store metrics...
+            </div>
+          ) : error ? (
+            <div className="card" style={{ textAlign: 'center', padding: '60px', color: '#ff5252' }}>
+              {error}
             </div>
           ) : !activeStore ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
