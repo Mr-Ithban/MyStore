@@ -63,6 +63,14 @@ export class AuthService {
     return { accessToken, user: this.toPublicUser(user) };
   }
 
+  async getProfile(userId: string): Promise<PublicUser> {
+    const user = await this.prisma.client.orm.public.User.where({ id: userId }).first();
+    if (!user) {
+      throw new UnauthorizedException('User not found.');
+    }
+    return this.toPublicUser(user);
+  }
+
   async changePassword(userId: string, dto: ChangePasswordDto): Promise<void> {
     const user = await this.prisma.client.orm.public.User.where({ id: userId }).first();
     if (!user || !(await bcrypt.compare(dto.currentPassword, user.passwordHash))) {

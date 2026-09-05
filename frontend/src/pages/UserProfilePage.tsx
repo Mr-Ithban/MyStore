@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import { Sidebar } from '../components/Sidebar';
@@ -17,6 +17,13 @@ export const UserProfilePage: React.FC = () => {
 
   const [name, setName] = useState(user?.name || '');
   const [address, setAddress] = useState(user?.address || '');
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name || '');
+      setAddress(user.address || '');
+    }
+  }, [user]);
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');

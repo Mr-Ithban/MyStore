@@ -26,6 +26,6 @@ export class AuthController {
   @Roles('ADMIN', 'USER', 'STORE_OWNER')
   @UseGuards(JwtAuthGuard, RolesGuard)
   me(@CurrentUser() user: AuthenticatedUser) {
-    return user;
+    return this.authService.getProfile(user.sub);
   }
 }
