@@ -4,7 +4,11 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module.js';
 
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-jwt-secret-key';
+process.env.JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
+
 describe('AppController (e2e)', () => {
+
   let app: INestApplication<App>;
 
   beforeEach(async () => {
