@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 import type { Store, User, Paginated } from '../types';
 import { Sidebar } from '../components/Sidebar';
@@ -15,6 +16,7 @@ interface ApiError {
 }
 
 export const AdminStoresPage: React.FC = () => {
+  const navigate = useNavigate();
   const [stores, setStores] = useState<Store[]>([]);
   const [storeOwners, setStoreOwners] = useState<User[]>([]);
   const [search, setSearch] = useState('');
@@ -23,12 +25,20 @@ export const AdminStoresPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [ownerId, setOwnerId] = useState('');
   const [modalError, setModalError] = useState('');
   const [creating, setCreating] = useState(false);
+
+  const handleDeleteStoreClick = (s: Store) => {
+    setSelectedStore(s);
+    setIsDeleteModalOpen(true);
+  };
 
   const fetchStores = useCallback(async () => {
     try {
@@ -184,8 +194,21 @@ export const AdminStoresPage: React.FC = () => {
                         </div>
                       </td>
                       <td style={{ textAlign: 'right' }}>
-                        <button className="btn-icon">✎</button>
-                        <button className="btn-icon" style={{ color: '#f87171' }}>🗑</button>
+                        <button
+                          className="btn-icon"
+                          title="View Store Details"
+                          onClick={() => navigate(`/stores/${s.id}`)}
+                        >
+                          ✎
+                        </button>
+                        <button
+                          className="btn-icon"
+                          style={{ color: '#f87171' }}
+                          title="Manage Store Action"
+                          onClick={() => handleDeleteStoreClick(s)}
+                        >
+                          🗑
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -301,6 +324,50 @@ export const AdminStoresPage: React.FC = () => {
             {creating ? 'Creating Store...' : 'Add Store'}
           </button>
         </form>
+      </Modal>
+
+      {/* Delete / Action Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Manage Store Action"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <p style={{ color: 'var(--text-main)', fontSize: '0.95rem' }}>
+            You are managing store record <strong>{selectedStore?.name}</strong> ({selectedStore?.email}).
+          </p>
+          <div
+            style={{
+              padding: '12px 16px',
+              borderRadius: 'var(--radius-sm)',
+              background: 'rgba(255, 171, 0, 0.1)',
+              border: '1px solid rgba(255, 171, 0, 0.3)',
+              color: '#ffab00',
+              fontSize: '0.88rem',
+            }}
+          >
+            Store management is active. Click <strong>✎ Edit</strong> to open full store details page or manage ratings.
+          </div>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                setIsDeleteModalOpen(false);
+                if (selectedStore) navigate(`/stores/${selectedStore.id}`);
+              }}
+              style={{ flex: 1 }}
+            >
+              Open Store Details Page
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setIsDeleteModalOpen(false)}
+              style={{ flex: 1 }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

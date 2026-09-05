@@ -22,6 +22,12 @@ export const AdminUsersPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [userDetailData, setUserDetailData] = useState<{ id: string; name: string; email: string; address: string; role: string; averageRating?: number | null } | null>(null);
+  const [loadingDetail, setLoadingDetail] = useState(false);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
@@ -29,6 +35,26 @@ export const AdminUsersPage: React.FC = () => {
   const [role, setRole] = useState<UserRole>('USER');
   const [modalError, setModalError] = useState('');
   const [creating, setCreating] = useState(false);
+
+  const handleViewUserDetail = async (u: User) => {
+    setSelectedUser(u);
+    setUserDetailData(null);
+    setLoadingDetail(true);
+    setIsDetailModalOpen(true);
+    try {
+      const res = await api.get(`/admin/users/${u.id}`);
+      setUserDetailData(res.data);
+    } catch {
+      setUserDetailData(u);
+    } finally {
+      setLoadingDetail(false);
+    }
+  };
+
+  const handleDeleteUserClick = (u: User) => {
+    setSelectedUser(u);
+    setIsDeleteModalOpen(true);
+  };
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -175,8 +201,21 @@ export const AdminUsersPage: React.FC = () => {
                       </td>
                       <td style={{ color: 'var(--text-muted)' }}>{u.address}</td>
                       <td style={{ textAlign: 'right' }}>
-                        <button className="btn-icon">✎</button>
-                        <button className="btn-icon" style={{ color: '#f87171' }}>🗑</button>
+                        <button
+                          className="btn-icon"
+                          title="View User Details"
+                          onClick={() => handleViewUserDetail(u)}
+                        >
+                          ✎
+                        </button>
+                        <button
+                          className="btn-icon"
+                          style={{ color: '#f87171' }}
+                          title="User Management Info"
+                          onClick={() => handleDeleteUserClick(u)}
+                        >
+                          🗑
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -292,6 +331,96 @@ export const AdminUsersPage: React.FC = () => {
             {creating ? 'Creating User...' : 'Add User'}
           </button>
         </form>
+      </Modal>
+
+      {/* User Detail Modal */}
+      <Modal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        title="User Details"
+      >
+        {loadingDetail ? (
+          <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
+            Loading user details...
+          </div>
+        ) : selectedUser ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div>
+              <span className="eyebrow">NAME</span>
+              <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{selectedUser.name}</div>
+            </div>
+
+            <div>
+              <span className="eyebrow">EMAIL</span>
+              <div style={{ fontSize: '0.95rem' }}>{selectedUser.email}</div>
+            </div>
+
+            <div>
+              <span className="eyebrow">ROLE</span>
+              <div style={{ marginTop: '4px' }}>
+                <span className={`role-badge ${selectedUser.role.toLowerCase()}`}>
+                  {selectedUser.role}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <span className="eyebrow">ADDRESS</span>
+              <div style={{ fontSize: '0.9rem', color: 'var(--text-main)' }}>
+                {selectedUser.address || 'Not specified'}
+              </div>
+            </div>
+
+            {userDetailData?.averageRating !== undefined && userDetailData?.averageRating !== null && (
+              <div>
+                <span className="eyebrow">STORE OWNER RATING AVERAGE</span>
+                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--star-gold)' }}>
+                  ★ {userDetailData.averageRating}
+                </div>
+              </div>
+            )}
+
+            <button
+              className="btn btn-secondary"
+              onClick={() => setIsDetailModalOpen(false)}
+              style={{ width: '100%', marginTop: '16px' }}
+            >
+              Close
+            </button>
+          </div>
+        ) : null}
+      </Modal>
+
+      {/* Delete / Action Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Manage User Action"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <p style={{ color: 'var(--text-main)', fontSize: '0.95rem' }}>
+            You are managing user record <strong>{selectedUser?.name}</strong> ({selectedUser?.email}).
+          </p>
+          <div
+            style={{
+              padding: '12px 16px',
+              borderRadius: 'var(--radius-sm)',
+              background: 'rgba(255, 171, 0, 0.1)',
+              border: '1px solid rgba(255, 171, 0, 0.3)',
+              color: '#ffab00',
+              fontSize: '0.88rem',
+            }}
+          >
+            User record management is active. To update role or personal details, please contact system operations.
+          </div>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setIsDeleteModalOpen(false)}
+            style={{ width: '100%', marginTop: '8px' }}
+          >
+            Close
+          </button>
+        </div>
       </Modal>
     </div>
   );
