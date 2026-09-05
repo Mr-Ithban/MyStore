@@ -1,0 +1,3 @@
+import { Transform } from 'class-transformer';
+import { IsEmail, IsString, IsUUID, Length, MaxLength } from 'class-validator';
+export class CreateStoreDto { @Transform(({ value }: { value: unknown }) => typeof value === 'string' ? value.trim() : value) @IsString() @Length(1, 60) name!: string; @Transform(({ value }: { value: unknown }) => typeof value === 'string' ? value.trim().toLowerCase() : value) @IsEmail() @MaxLength(255) email!: string; @Transform(({ value }: { value: unknown }) => typeof value === 'string' ? value.trim() : value) @IsString() @MaxLength(400) address!: string; @IsUUID() ownerId!: string; }
