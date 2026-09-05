@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 import type { Store } from '../types';
 import { StarRating } from '../components/StarRating';
+import { useAuth } from '../context/AuthContext';
 
 export const LandingPage: React.FC = () => {
+  const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [featuredStores, setFeaturedStores] = useState<Store[]>([]);
   const navigate = useNavigate();
@@ -51,14 +53,42 @@ export const LandingPage: React.FC = () => {
           </a>
         </nav>
 
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <button className="btn btn-secondary" onClick={() => navigate('/login')}>
-            Login
-          </button>
-          <button className="btn btn-primary" onClick={() => navigate('/signup')}>
-            Sign Up
-          </button>
-        </div>
+        {user ? (
+          <div
+            style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
+            onClick={() => navigate('/profile')}
+          >
+            <div
+              className="user-avatar"
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                background: 'var(--primary)',
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 700,
+              }}
+            >
+              {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '0.9rem' }}>{user.name}</span>
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{user.role}</span>
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button className="btn btn-secondary" onClick={() => navigate('/login')}>
+              Login
+            </button>
+            <button className="btn btn-primary" onClick={() => navigate('/signup')}>
+              Sign Up
+            </button>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
