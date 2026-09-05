@@ -25,5 +25,6 @@ type JwtExpiry = NonNullable<JwtModuleOptions['signOptions']>['expiresIn'];
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtAuthGuard, RolesGuard],
+  exports: [AuthService, JwtAuthGuard, RolesGuard, JwtModule],
 })
 export class AuthModule {}

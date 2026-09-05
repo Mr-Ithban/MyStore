@@ -1,0 +1,5 @@
+import { Controller, Get, Param, ParseUUIDPipe, Query, UseGuards } from '@nestjs/common';
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js'; import { Roles } from '../auth/decorators/roles.decorator.js'; import type { AuthenticatedUser } from '../auth/auth.types.js'; import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js'; import { RolesGuard } from '../auth/guards/roles.guard.js';
+import { StoreQueryDto } from './dto/store-query.dto.js'; import { StoresService } from './stores.service.js';
+@Controller('stores') @UseGuards(JwtAuthGuard, RolesGuard) @Roles('ADMIN', 'USER', 'STORE_OWNER')
+export class StoresController { constructor(private readonly storesService: StoresService) {} @Get() findAll(@CurrentUser() user: AuthenticatedUser, @Query() query: StoreQueryDto) { return this.storesService.findAll(user.sub, query); } @Get(':id') findOne(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthenticatedUser) { return this.storesService.findOne(id, user.sub); } }

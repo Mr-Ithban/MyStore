@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { LoginDto } from './dto/login.dto.js';
 import type { RegisterDto } from './dto/register.dto.js';
+import type { ChangePasswordDto } from './dto/change-password.dto.js';
 import type { UserRole } from './auth.types.js';
 
 type Varchar<Length extends number> = string & { readonly __varcharLength: Length };
@@ -60,6 +61,15 @@ export class AuthService {
     });
 
     return { accessToken, user: this.toPublicUser(user) };
+  }
+
+  async changePassword(userId: string, dto: ChangePasswordDto): Promise<void> {
+    const user = await this.prisma.client.orm.public.User.where({ id: userId }).first();
+    if (!user || !(await bcrypt.compare(dto.currentPassword, user.passwordHash))) {
+      throw new UnauthorizedException('Current password is incorrect.');
+    }
+    const passwordHash = await bcrypt.hash(dto.newPassword, this.saltRounds);
+    await this.prisma.client.orm.public.User.where({ id: userId }).update({ passwordHash: varchar<255>(passwordHash) });
   }
 
   private async findByEmail(email: string): Promise<DatabaseUser | null> {
