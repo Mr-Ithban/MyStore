@@ -136,24 +136,6 @@ export const LandingPage: React.FC = () => {
               FIND WHAT<br />YOU LOVE
             </h3>
           </div>
-
-          {/* Rating Floating Bubble */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '20px',
-              left: '-20px',
-              backgroundColor: 'rgba(23, 29, 43, 0.9)',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid var(--border-light)',
-              padding: '12px 20px',
-              borderRadius: 'var(--radius-md)',
-              boxShadow: 'var(--shadow-md)',
-            }}
-          >
-            <div style={{ color: 'var(--star-gold)', fontWeight: 700, fontSize: '1.1rem' }}>★ 4.8</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Average rating</div>
-          </div>
         </div>
       </section>
 
