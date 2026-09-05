@@ -40,7 +40,15 @@ export const LandingPage: React.FC = () => {
         <nav style={{ display: 'flex', gap: '28px', color: 'var(--text-muted)', fontWeight: 500 }}>
           <a href="#" style={{ color: 'var(--text-main)' }}>Home</a>
           <a href="#" onClick={(e) => { e.preventDefault(); navigate('/explore'); }}>Explore</a>
-          <a href="#">About</a>
+          <a
+            href="#about"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
+            About
+          </a>
         </nav>
 
         <div style={{ display: 'flex', gap: '12px' }}>
@@ -140,7 +148,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Stats Bar (UI 01) */}
-      <section className="landing-stats-bar">
+      <section id="about" className="landing-stats-bar">
         <div>
           <div className="stat-number">5K+</div>
           <div className="stat-label">Stores Listed</div>

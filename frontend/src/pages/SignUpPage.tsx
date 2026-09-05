@@ -83,11 +83,16 @@ export const SignUpPage: React.FC = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Full name</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <label style={{ marginBottom: 0 }}>Full name</label>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-subtle)' }}>20–60 characters</span>
+            </div>
             <input
               type="text"
               required
-              placeholder="Enter your full name"
+              minLength={20}
+              maxLength={60}
+              placeholder="e.g. Muhammed Ithban Student Account"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -116,7 +121,10 @@ export const SignUpPage: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label>Password</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <label style={{ marginBottom: 0 }}>Password</label>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-subtle)' }}>8–16 chars, 1 uppercase & 1 special</span>
+            </div>
             <div style={{ position: 'relative' }}>
               <input
                 type={showPassword ? 'text' : 'password'}
